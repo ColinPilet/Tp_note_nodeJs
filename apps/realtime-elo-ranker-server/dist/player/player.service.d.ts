@@ -5,12 +5,12 @@ export declare class PlayerService {
     static getInstance(): PlayerService;
     addPlayer(nomPlayer: string): void;
     getPlayer(name: string): {
-        name: string;
+        id: string;
         rank: number;
     } | undefined;
     getAllPlayers(): {
-        name: string;
+        id: string;
         rank: number;
     }[];
-    updatePlayerRank(name: string, rank: number): void;
+    updatePlayerRank(id: string, rank: number): void;
 }

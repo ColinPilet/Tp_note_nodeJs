@@ -4,11 +4,11 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class PlayerService {
     private static instance: PlayerService;
-    private players: Map<string, number> = new Map();
+    private players: {id: string, rank: number }[] = [];
 
     private constructor() {
-        this.players.set('player1', 1000);
-        this.players.set('player2', 1000);
+        this.players.push({ id: 'player1', rank: 1000 });
+        this.players.push({ id: 'player2', rank: 1000 });
     }
 
     static getInstance(): PlayerService {
@@ -19,22 +19,24 @@ export class PlayerService {
     }
 
     addPlayer(nomPlayer: string): void {
-        this.players.set(nomPlayer, 1000);
+        console.log(`Received player name: ${nomPlayer}`);
+        this.players.push({id: nomPlayer, rank:1000});
     }
 
-    getPlayer(name: string): { name: string, rank: number } | undefined {
-        const rank = this.players.get(name);
-        if (rank !== undefined) {
-            return { name, rank };
+    getPlayer(name: string): { id: string, rank: number } | undefined  {
+        return this.players.find(player => player.id === name);
+
+    }
+
+    getAllPlayers(): { id: string, rank: number }[] {
+        return this.players;
+    }
+
+    updatePlayerRank(id: string, rank: number): void {
+        const player = this.getPlayer(id);
+        if (player) {
+          player.rank = rank;
         }
-        return undefined;
     }
 
-    getAllPlayers(): { name: string, rank: number }[] {
-        return Array.from(this.players, ([name, rank]) => ({ name, rank }));
-    }
-
-    updatePlayerRank(name: string, rank: number): void {
-        this.players.set(name, rank);
-    }
 }

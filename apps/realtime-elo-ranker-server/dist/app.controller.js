@@ -24,12 +24,34 @@ let AppController = class AppController {
     getHello() {
         return this.appService.getHello();
     }
-    addPlayer(name) {
-        this.playerService.addPlayer(name);
-        return 'Player added successfully';
+    addPlayer(body) {
+        const { id } = body;
+        this.playerService.addPlayer(id);
+        return `Player ${id} added successfully`;
     }
     getPlayers() {
         return this.playerService.getAllPlayers();
+    }
+    subscribeRankingEvents(res, req) {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        const sendRankingUpdate = () => {
+            const players = this.playerService.getAllPlayers();
+            const randomPlayer = players[Math.floor(Math.random() * players.length)];
+            const data = {
+                type: "RankingUpdate",
+                player: randomPlayer
+            };
+            res.write(`event: message\n`);
+            res.write(`data: ${JSON.stringify(data)}\n\n`);
+        };
+        const interval = setInterval(sendRankingUpdate, 500);
+        req.on('close', () => {
+            clearInterval(interval);
+            res.end();
+        });
     }
 };
 exports.AppController = AppController;
@@ -40,18 +62,26 @@ __decorate([
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
 __decorate([
-    (0, common_1.Post)('add-player'),
+    (0, common_1.Post)('api/player'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", String)
 ], AppController.prototype, "addPlayer", null);
 __decorate([
-    (0, common_1.Get)('players'),
+    (0, common_1.Get)('/api/ranking'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Array)
 ], AppController.prototype, "getPlayers", null);
+__decorate([
+    (0, common_1.Get)('/api/ranking/events'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "subscribeRankingEvents", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

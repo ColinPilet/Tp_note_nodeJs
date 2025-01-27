@@ -14,9 +14,9 @@ exports.PlayerService = void 0;
 const common_1 = require("@nestjs/common");
 let PlayerService = PlayerService_1 = class PlayerService {
     constructor() {
-        this.players = new Map();
-        this.players.set('player1', 1000);
-        this.players.set('player2', 1000);
+        this.players = [];
+        this.players.push({ id: 'player1', rank: 1000 });
+        this.players.push({ id: 'player2', rank: 1000 });
     }
     static getInstance() {
         if (!PlayerService_1.instance) {
@@ -25,20 +25,20 @@ let PlayerService = PlayerService_1 = class PlayerService {
         return PlayerService_1.instance;
     }
     addPlayer(nomPlayer) {
-        this.players.set(nomPlayer, 1000);
+        console.log(`Received player name: ${nomPlayer}`);
+        this.players.push({ id: nomPlayer, rank: 1000 });
     }
     getPlayer(name) {
-        const rank = this.players.get(name);
-        if (rank !== undefined) {
-            return { name, rank };
-        }
-        return undefined;
+        return this.players.find(player => player.id === name);
     }
     getAllPlayers() {
-        return Array.from(this.players, ([name, rank]) => ({ name, rank }));
+        return this.players;
     }
-    updatePlayerRank(name, rank) {
-        this.players.set(name, rank);
+    updatePlayerRank(id, rank) {
+        const player = this.getPlayer(id);
+        if (player) {
+            player.rank = rank;
+        }
     }
 };
 exports.PlayerService = PlayerService;
