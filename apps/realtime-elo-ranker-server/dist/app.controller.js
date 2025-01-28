@@ -24,11 +24,13 @@ let AppController = class AppController {
     getHello() {
         return this.appService.getHello();
     }
-    addPlayer(body) {
+    addPlayer(res, body) {
         const { id } = body;
         if (this.playerService.addPlayer(id)) {
+            res.status(200).send(id);
             return `Player ${id} added successfully`;
         }
+        res.status(400).send(`Player ${id} already exists`);
         return `Player ${id} already exists`;
     }
     getPlayers() {
@@ -66,9 +68,10 @@ __decorate([
 ], AppController.prototype, "getHello", null);
 __decorate([
     (0, common_1.Post)('api/player'),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", String)
 ], AppController.prototype, "addPlayer", null);
 __decorate([

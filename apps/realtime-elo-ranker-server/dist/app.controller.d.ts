@@ -5,7 +5,7 @@ export declare class AppController {
     private playerService;
     constructor(appService: AppService);
     getHello(): string;
-    addPlayer(body: {
+    addPlayer(res: Response, body: {
         id: string;
     }): string;
     getPlayers(): {

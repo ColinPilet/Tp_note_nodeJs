@@ -17,11 +17,13 @@ export class AppController {
   }
 
   @Post('api/player')
-  addPlayer(@Body() body: { id: string}): string {
+  addPlayer(@Res() res: Response, @Body() body: { id: string}): string {
     const { id } = body;
     if(this.playerService.addPlayer(id)){
+      res.status(200).send(id);
       return `Player ${id} added successfully`;
     }
+    res.status(400).send(`Player ${id} already exists`);
     return `Player ${id} already exists`;
   }
 

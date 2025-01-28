@@ -6,7 +6,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: 'http://localhost:3000/', // Remplacez par l'URL de votre client
+    origin: 'http://localhost:3000', // Remplacez par l'URL de votre client
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
