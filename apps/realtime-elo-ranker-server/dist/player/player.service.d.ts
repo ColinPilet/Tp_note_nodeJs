@@ -3,7 +3,7 @@ export declare class PlayerService {
     private players;
     private constructor();
     static getInstance(): PlayerService;
-    addPlayer(nomPlayer: string): void;
+    addPlayer(nomPlayer: string): boolean;
     getPlayer(name: string): {
         id: string;
         rank: number;
@@ -12,5 +12,6 @@ export declare class PlayerService {
         id: string;
         rank: number;
     }[];
-    updatePlayerRank(id: string, rank: number): void;
+    updatePlayerRank(name: string, rank: number): void;
+    getAverageRank(): number;
 }

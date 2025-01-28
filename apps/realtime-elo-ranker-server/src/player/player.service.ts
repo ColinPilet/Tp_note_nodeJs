@@ -8,7 +8,7 @@ export class PlayerService {
 
     private constructor() {
         this.players.push({ id: 'player1', rank: 1000 });
-        this.players.push({ id: 'player2', rank: 1000 });
+        this.players.push({ id: 'player2', rank: 2000 });
     }
 
     static getInstance(): PlayerService {
@@ -18,9 +18,13 @@ export class PlayerService {
         return PlayerService.instance;
     }
 
-    addPlayer(nomPlayer: string): void {
-        console.log(`Received player name: ${nomPlayer}`);
-        this.players.push({id: nomPlayer, rank:1000});
+    addPlayer(nomPlayer: string): boolean {
+        if(!this.getPlayer(nomPlayer)){
+            console.log(`Player ${nomPlayer} add successfully`);
+            this.players.push({id: nomPlayer, rank:this.getAverageRank()});
+            return true;
+        }
+        return false;
     }
 
     getPlayer(name: string): { id: string, rank: number } | undefined  {
@@ -32,11 +36,16 @@ export class PlayerService {
         return this.players;
     }
 
-    updatePlayerRank(id: string, rank: number): void {
-        const player = this.getPlayer(id);
+    updatePlayerRank(name: string, rank: number): void {
+        const player = this.getPlayer(name);
         if (player) {
           player.rank = rank;
         }
+    }
+
+    getAverageRank(): number {
+        const totalRank = this.players.reduce((sum, player) => sum + player.rank, 0);
+        return this.players.length ? Math.floor(totalRank / this.players.length) : 0;
     }
 
 }

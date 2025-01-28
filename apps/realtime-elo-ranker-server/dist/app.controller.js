@@ -26,8 +26,10 @@ let AppController = class AppController {
     }
     addPlayer(body) {
         const { id } = body;
-        this.playerService.addPlayer(id);
-        return `Player ${id} added successfully`;
+        if (this.playerService.addPlayer(id)) {
+            return `Player ${id} added successfully`;
+        }
+        return `Player ${id} already exists`;
     }
     getPlayers() {
         return this.playerService.getAllPlayers();
@@ -44,6 +46,7 @@ let AppController = class AppController {
                 type: "RankingUpdate",
                 player: randomPlayer
             };
+            this.playerService.updatePlayerRank(randomPlayer.id, randomPlayer.rank + Math.floor(Math.random() * 100) - 50);
             res.write(`event: message\n`);
             res.write(`data: ${JSON.stringify(data)}\n\n`);
         };

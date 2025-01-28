@@ -19,8 +19,10 @@ export class AppController {
   @Post('api/player')
   addPlayer(@Body() body: { id: string}): string {
     const { id } = body;
-    this.playerService.addPlayer(id);
-    return `Player ${id} added successfully`;
+    if(this.playerService.addPlayer(id)){
+      return `Player ${id} added successfully`;
+    }
+    return `Player ${id} already exists`;
   }
 
 
@@ -43,6 +45,7 @@ export class AppController {
         type: "RankingUpdate",
         player: randomPlayer
       };
+      this.playerService.updatePlayerRank(randomPlayer.id, randomPlayer.rank + Math.floor(Math.random() * 100) - 50);
       res.write(`event: message\n`);
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
