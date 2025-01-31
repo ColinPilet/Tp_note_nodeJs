@@ -9,6 +9,7 @@ import {
 import { Poppins } from "next/font/google";
 import { useCallback, useEffect, useState } from "react";
 import fetchRanking from "../services/ranking/fetch-ranking";
+import { eventEmitter } from "../services/event-emitter";
 import subscribeRankingEvents from "../services/ranking/subscribe-ranking-events";
 import {
   RankingEvent,
@@ -16,7 +17,7 @@ import {
 } from "../services/ranking/models/ranking-event";
 import { motion } from "motion/react";
 import postMatchResult from "../services/match/post-match-result";
-import postPlayer from "../services/player/post-player";
+import { postPlayer } from "../services/player/post-player";
 
 const poppinsBold = Poppins({
   weight: "600",
@@ -106,6 +107,17 @@ export default function Home() {
     };
     return () => eventSource.close();
   }, [API_BASE_URL, updateLadderData]);
+
+  useEffect(() =>{
+    const handlePlayerPosted = (playerId : String) => {
+      fetchRanking(API_BASE_URL).then(setLadderData);
+    }
+    eventEmitter.on("playerPosted",handlePlayerPosted);
+
+    return() => {
+      eventEmitter.off("playerPosted",handlePlayerPosted);
+    }
+      });
 
   return (
     <div className="min-h-screen w-full">
