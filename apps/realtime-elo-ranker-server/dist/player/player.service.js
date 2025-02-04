@@ -14,9 +14,9 @@ exports.PlayerService = void 0;
 const common_1 = require("@nestjs/common");
 let PlayerService = PlayerService_1 = class PlayerService {
     constructor() {
-        this.players = [];
-        this.players.push({ id: 'player1', rank: 1000 });
-        this.players.push({ id: 'player2', rank: 2000 });
+        this.playersRanking = [];
+        this.playersRanking.push({ id: 'player1', rank: 1000 });
+        this.playersRanking.push({ id: 'player2', rank: 2000 });
     }
     static getInstance() {
         if (!PlayerService_1.instance) {
@@ -27,16 +27,20 @@ let PlayerService = PlayerService_1 = class PlayerService {
     addPlayer(nomPlayer) {
         if (!this.getPlayer(nomPlayer)) {
             console.log(`Player ${nomPlayer} add successfully`);
-            this.players.push({ id: nomPlayer, rank: this.getAverageRank() });
+            this.playersRanking.push({ id: nomPlayer, rank: this.getAverageRank() });
             return true;
         }
         return false;
     }
     getPlayer(name) {
-        return this.players.find(player => player.id === name);
+        return this.playersRanking.find(player => player.id === name);
+    }
+    getRank(name) {
+        const player = this.getPlayer(name);
+        return player ? player.rank : 0;
     }
     getAllPlayers() {
-        return this.players;
+        return this.playersRanking;
     }
     updatePlayerRank(name, rank) {
         const player = this.getPlayer(name);
@@ -45,8 +49,8 @@ let PlayerService = PlayerService_1 = class PlayerService {
         }
     }
     getAverageRank() {
-        const totalRank = this.players.reduce((sum, player) => sum + player.rank, 0);
-        return this.players.length ? Math.floor(totalRank / this.players.length) : 0;
+        const totalRank = this.playersRanking.reduce((sum, player) => sum + player.rank, 0);
+        return this.playersRanking.length ? Math.floor(totalRank / this.playersRanking.length) : 0;
     }
 };
 exports.PlayerService = PlayerService;

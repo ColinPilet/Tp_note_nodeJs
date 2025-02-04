@@ -11,7 +11,7 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const player_service_1 = require("./player/player.service");
-const ranking_service_1 = require("./ranking/ranking.service");
+const match_service_1 = require("./match/match.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -19,7 +19,7 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, player_service_1.PlayerService, ranking_service_1.RankingService],
+        providers: [app_service_1.AppService, player_service_1.PlayerService, match_service_1.MatchService,],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

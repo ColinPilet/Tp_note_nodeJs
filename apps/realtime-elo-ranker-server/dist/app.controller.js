@@ -16,10 +16,12 @@ exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
 const player_service_1 = require("./player/player.service");
+const match_service_1 = require("./match/match.service");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
         this.playerService = player_service_1.PlayerService.getInstance();
+        this.matchService = match_service_1.MatchService.getInstance();
     }
     getHello() {
         return this.appService.getHello();
@@ -48,7 +50,6 @@ let AppController = class AppController {
                 type: "RankingUpdate",
                 player: randomPlayer
             };
-            this.playerService.updatePlayerRank(randomPlayer.id, randomPlayer.rank + Math.floor(Math.random() * 100) - 50);
             res.write(`event: message\n`);
             res.write(`data: ${JSON.stringify(data)}\n\n`);
         };
@@ -57,6 +58,10 @@ let AppController = class AppController {
             clearInterval(interval);
             res.end();
         });
+    }
+    match(res, body) {
+        res.status(200).send('Match');
+        this.matchService.match(body.winner, body.loser, body.draw);
     }
 };
 exports.AppController = AppController;
@@ -88,6 +93,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "subscribeRankingEvents", null);
+__decorate([
+    (0, common_1.Post)('/api/match'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "match", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

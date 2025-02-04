@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 export declare class AppController {
     private readonly appService;
     private playerService;
+    private matchService;
     constructor(appService: AppService);
     getHello(): string;
     addPlayer(res: Response, body: {
@@ -13,4 +14,9 @@ export declare class AppController {
         rank: number;
     }[];
     subscribeRankingEvents(res: Response, req: Request): void;
+    match(res: Response, body: {
+        winner: string;
+        loser: string;
+        draw: boolean;
+    }): void;
 }

@@ -112,10 +112,15 @@ export default function Home() {
     const handlePlayerPosted = (playerId : String) => {
       fetchRanking(API_BASE_URL).then(setLadderData);
     }
-    eventEmitter.on("playerPosted",handlePlayerPosted);
+    const handleMatchPosted = (matchData: { adversaryA: string; adversaryB: string; result: MatchResult }) => {
+      fetchRanking(API_BASE_URL).then(setLadderData);
+    };
 
+    eventEmitter.on("playerPosted",handlePlayerPosted);
+    eventEmitter.on("matchPosted",handleMatchPosted);
     return() => {
       eventEmitter.off("playerPosted",handlePlayerPosted);
+      eventEmitter.off("matchPosted",handleMatchPosted);
     }
       });
 

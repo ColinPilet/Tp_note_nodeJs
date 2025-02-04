@@ -2,13 +2,16 @@ import { Body, Controller, Get, Post, Res, Req } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AppService } from './app.service';
 import { PlayerService } from './player/player.service';
+import { MatchService } from './match/match.service';
 
 @Controller()
 export class AppController {
   private playerService: PlayerService;
+  private matchService: MatchService;
 
   constructor(private readonly appService: AppService) {
     this.playerService = PlayerService.getInstance();
+    this.matchService = MatchService.getInstance();
   }
 
   @Get()
@@ -47,7 +50,7 @@ export class AppController {
         type: "RankingUpdate",
         player: randomPlayer
       };
-      this.playerService.updatePlayerRank(randomPlayer.id, randomPlayer.rank + Math.floor(Math.random() * 100) - 50);
+      // this.playerService.updatePlayerRank(randomPlayer.id, randomPlayer.rank + Math.floor(Math.random() * 100) - 50);
       res.write(`event: message\n`);
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
@@ -58,5 +61,11 @@ export class AppController {
       clearInterval(interval);
       res.end();
     });
+  }
+
+  @Post('/api/match')
+  match(@Res() res: Response, @Body() body: { winner: string, loser: string, draw: boolean }): void {
+      res.status(200).send('Match');
+      this.matchService.match(body.winner, body.loser, body.draw);
   }
 }
